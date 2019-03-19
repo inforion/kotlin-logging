@@ -17,8 +17,8 @@ class Logging {
     fun <T> createLogger(klass: Class<T>, level: Level): Logger = create(klass, level)
 
     companion object {
-        private val loggingConfPathVariable = "KOPYCAT_LOGGING_CONF_PATH"
-        private val loggingConfDebugVariable = "KOPYCAT_LOGGING_PRINT"
+        private const val loggingConfPathVariable = "INFORION_LOGGING_CONF_PATH"
+        private const val loggingConfDebugVariable = "INFORION_LOGGING_PRINT"
 
         private val config = Formatter.Config(
                 levelLength = 6,
