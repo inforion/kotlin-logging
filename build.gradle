@@ -1,12 +1,14 @@
 plugins {
     id 'maven'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.21'
+    id 'maven-publish'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.72'
 }
 
 group 'ru.inforion.lab403.common'
-version '0.1.0'
+version '0.2.0'
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven {
         url "https://jitpack.io"
@@ -14,10 +16,10 @@ repositories {
 }
 
 dependencies {
-    compile("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.2")
+    compile("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.2")
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    implementation 'com.github.inforion:kotlin-extensions:v0.1.0'
+    implementation "ru.inforion.lab403.common:kotlin-extensions:+"
 }
 
 compileKotlin {
@@ -38,6 +40,24 @@ install {
                     distribution 'repo'
                 }
             }
+        }
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = 'kotlin-logging'
+            version = version
+
+            from components.kotlin
+            artifact tasks.sourcesJar
         }
     }
 }
