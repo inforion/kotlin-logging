@@ -1,6 +1,6 @@
 package ru.inforion.lab403.common.logging
 
-object OperatingSystem {
+internal object OperatingSystem {
     val name = System.getProperty("os.name").toLowerCase()
 
     val isWindows: Boolean = name.indexOf("win") >= 0

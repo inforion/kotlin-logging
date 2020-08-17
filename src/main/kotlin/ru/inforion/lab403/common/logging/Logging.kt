@@ -7,6 +7,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.logging.Level
+import java.util.logging.Level.*
 import java.util.logging.Logger
 import kotlin.collections.ArrayList
 
@@ -64,7 +65,7 @@ class Logging {
                     try {
                         val json = confFile.readText()
                         val conf = parser.readValue<Map<String, String>>(json)
-                        conf.forEach { loggingLevels[it.key] = Level.parse(it.value) }
+                        conf.forEach { loggingLevels[it.key] = parse(it.value) }
                     } catch (e: Exception) {
                         if (loggingConfDebug)
                             println("Can't parse log level configuration file $confFile due to $e")
@@ -92,23 +93,24 @@ class Logging {
             }
         }
 
-        val loggers = HashMap<String, Logger>()
+        private val loggers = mutableMapOf<String, Logger>()
 
-        fun <T> create(klass: Class<T>, level: Level): Logger {
-            return loggers.getOrPut(klass.simpleName) {
-                Logger.getLogger(klass.simpleName).apply {
-                    val realLevel = logLevel(klass.simpleName, level)
-                    this.addHandler(Handler(realLevel, config))
-                    handlerList.map { this.addHandler(it) }
-                    this.level = realLevel
-                    this.useParentHandlers = false
-                }
+        fun <T> create(klass: Class<T>, level: Level) = loggers.getOrPut(klass.simpleName) {
+            Logger.getLogger(klass.simpleName).apply {
+                val realLevel = logLevel(klass.simpleName, level)
+                this.addHandler(Handler(realLevel, config))
+                handlerList.map { this.addHandler(it) }
+                this.level = realLevel
+                this.useParentHandlers = false
             }
         }
 
-        fun addHandler(handler: java.util.logging.Handler){
-            handlerList.add(handler)
-            loggers.map { it.value.addHandler(handler) }
-        }
+        fun addHandler(handler: java.util.logging.Handler) = loggers.values
+            .filter { handler !in it.handlers }
+            .forEach { it.addHandler(handler) }
+
+        fun removeHandler(handler: java.util.logging.Handler) = loggers.values
+            .filter { handler in it.handlers }
+            .forEach { it.removeHandler(handler) }
     }
 }
