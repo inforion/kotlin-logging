@@ -3,13 +3,12 @@ package ru.inforion.lab403.common.logging
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import ru.inforion.lab403.common.logging.formatters.ColorFormatter
+import ru.inforion.lab403.common.logging.handlers.AbstractHandler
+import ru.inforion.lab403.common.logging.handlers.StreamHandler
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
 import java.util.logging.Level
-import java.util.logging.Level.*
-import java.util.logging.Logger
-import kotlin.collections.ArrayList
 
 /**
  * Created by batman on 12/06/16.
@@ -21,7 +20,7 @@ class Logging {
         private const val loggingConfPathVariable = "INFORION_LOGGING_CONF_PATH"
         private const val loggingConfDebugVariable = "INFORION_LOGGING_PRINT"
 
-        private val config = Formatter.Config(
+        private val config = ColorFormatter.Config(
                 levelLength = 6,
                 classNameLength = 15,
                 methodNameLength = 16,
@@ -30,7 +29,7 @@ class Logging {
         )
 
         private var loggingConfDebug = false
-        private val handlerList = ArrayList<java.util.logging.Handler>()
+//        private val handlerList = ArrayList<java.util.logging.Handler>()
         private val loggingLevels = HashMap<String, Level>()
 
         private enum class State { INIT, LOADED, NOT_SPECIFIED }
@@ -65,7 +64,7 @@ class Logging {
                     try {
                         val json = confFile.readText()
                         val conf = parser.readValue<Map<String, String>>(json)
-                        conf.forEach { loggingLevels[it.key] = parse(it.value) }
+                        conf.forEach { loggingLevels[it.key] = it.value.logLevel() }
                     } catch (e: Exception) {
                         if (loggingConfDebug)
                             println("Can't parse log level configuration file $confFile due to $e")
@@ -81,7 +80,7 @@ class Logging {
                         println("Using default value for $name -> $default")
                         default
                     } else {
-                        println("Using configurated value for $name -> $result")
+                        println("Using configured value for $name -> $result")
                         result
                     }
                 } else loggingLevels.getOrDefault(name, default)
@@ -96,21 +95,12 @@ class Logging {
         private val loggers = mutableMapOf<String, Logger>()
 
         fun <T> create(klass: Class<T>, level: Level) = loggers.getOrPut(klass.simpleName) {
-            Logger.getLogger(klass.simpleName).apply {
-                val realLevel = logLevel(klass.simpleName, level)
-                this.addHandler(Handler(realLevel, config))
-                handlerList.map { this.addHandler(it) }
-                this.level = realLevel
-                this.useParentHandlers = false
-            }
+            val realLevel = logLevel(klass.simpleName, level)
+            Logger(klass.simpleName, realLevel, StreamHandler(System.out, ColorFormatter(config)))
         }
 
-        fun addHandler(handler: java.util.logging.Handler) = loggers.values
-            .filter { handler !in it.handlers }
-            .forEach { it.addHandler(handler) }
+        fun addHandler(handler: AbstractHandler) = loggers.values.forEach { it.addHandler(handler) }
 
-        fun removeHandler(handler: java.util.logging.Handler) = loggers.values
-            .filter { handler in it.handlers }
-            .forEach { it.removeHandler(handler) }
+        fun removeHandler(handler: AbstractHandler) = loggers.values.forEach { it.removeHandler(handler) }
     }
 }
