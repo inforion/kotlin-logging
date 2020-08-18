@@ -1,15 +1,14 @@
-package ru.inforion.lab403.common.logging
+package ru.inforion.lab403.common.logging.formatters
 
 import ru.inforion.lab403.common.extensions.emptyString
 import ru.inforion.lab403.common.extensions.stretch
+import ru.inforion.lab403.common.logging.common.Info
+import ru.inforion.lab403.common.logging.common.OperatingSystem
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.logging.Level
 
-/**
- * Created by batman on 12/06/16.
- */
-class Formatter(val config: Config) {
+class ColorFormatter(val config: Config): AbstractFormatter() {
 
     data class Config(
             val levelLength: Int,
@@ -77,7 +76,7 @@ class Formatter(val config: Config) {
     private fun formatOtherLines(info: Info, others: List<String>) =
             others.joinToString("\n") { "${getColor(info)}$it$resetChar" }
 
-    fun format(message: String, info: Info): String {
+    override fun format(message: String, info: Info): String {
         val lines = message.lines()
         return if (lines.size > 1) {
             // need to added character color for all lines

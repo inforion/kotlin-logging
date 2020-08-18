@@ -1,10 +1,10 @@
-package ru.inforion.lab403.common.logging
+package ru.inforion.lab403.common.logging.common
 
 import ru.inforion.lab403.common.logging.handlers.AbstractHandler
 import java.util.logging.Level
 import java.util.logging.Level.*
 
-class Logger(val name: String, val level: Level, vararg handlers: AbstractHandler) {
+class Logger(val name: String, level: Level, vararg handlers: AbstractHandler) {
 
     private val offValue = OFF.intValue()
     private val levelValue = level.intValue()

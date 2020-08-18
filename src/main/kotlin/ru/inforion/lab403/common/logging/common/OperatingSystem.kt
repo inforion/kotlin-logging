@@ -1,4 +1,4 @@
-package ru.inforion.lab403.common.logging
+package ru.inforion.lab403.common.logging.common
 
 internal object OperatingSystem {
     val name = System.getProperty("os.name").toLowerCase()
