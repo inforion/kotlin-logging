@@ -1,9 +1,8 @@
 package ru.inforion.lab403.common.logging.common
 
-import ru.inforion.lab403.common.logging.common.Logger
 import java.util.logging.Level
 
-data class Info constructor(
+class Info constructor(
     val logger: Logger,
     val level: Level,
     val millis: Long,
@@ -12,4 +11,6 @@ data class Info constructor(
     val sourceMethodName: String get() = caller.methodName
     val sourceClassName: String get() = caller.className
     val sourceLineNumber: Int get() = caller.lineNumber
+
+    val sourceFileName: String get() = caller.fileName ?: "null"
 }

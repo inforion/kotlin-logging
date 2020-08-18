@@ -11,16 +11,20 @@ class Logger(val name: String, level: Level, vararg handlers: AbstractHandler) {
 
     private val handlers = handlers.toMutableSet()
 
+    fun flush() = handlers.forEach { it.flush() }
+
     fun addHandler(handler: AbstractHandler) = handlers.add(handler)
 
     fun removeHandler(handler: AbstractHandler) = handlers.remove(handler)
 
     private fun millis() = System.currentTimeMillis()
 
-    private fun caller() = Thread.currentThread().stackTrace.first()
+    private fun caller() = Thread.currentThread().stackTrace[3]
 
     fun doLog(level: Level, message: String) {
-        val info = Info(this, level, millis(), caller())
+        val time = millis()
+        val caller = caller()
+        val info = Info(this, level, time, caller)
         handlers.forEach { it.log(message, info) }
     }
 

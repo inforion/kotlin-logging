@@ -8,14 +8,16 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.logging.Level
 
-class ColorFormatter(val config: Config): AbstractFormatter() {
+class BasicFormatter: AbstractFormatter() {
 
-    data class Config(
-            val levelLength: Int,
-            val classNameLength: Int,
-            val methodNameLength: Int,
-            val printLocation: Boolean,
-            val dateFormat: SimpleDateFormat)
+    companion object {
+        const val levelLength = 7
+        const val methodNameLength = 15
+        const val fileNameLength = 12
+        const val printLocation = true
+
+        private val sdf = SimpleDateFormat("HH:mm:ss")
+    }
 
     val ANSI_RESET = "\u001B[0m"
     val ANSI_BLACK = "\u001B[30m"
@@ -37,16 +39,6 @@ class ColorFormatter(val config: Config): AbstractFormatter() {
             Level.FINEST to ANSI_CYAN,
             Level.OFF to ANSI_BLACK)
 
-    private val names = mapOf(
-            Level.SEVERE to "SEVERE",
-            Level.WARNING to "WARN",
-            Level.INFO to "INFO",
-            Level.CONFIG to "CONFIG",
-            Level.FINE to "FINE",
-            Level.FINER to "FINER",
-            Level.FINEST to "FINEST",
-            Level.OFF to "OFF")
-
     private val resetChar = if (!OperatingSystem.isWindows) ANSI_RESET else ""
     private fun getColor(info: Info): String = if (!OperatingSystem.isWindows) colors.getValue(info.level) else ""
 
@@ -58,19 +50,17 @@ class ColorFormatter(val config: Config): AbstractFormatter() {
         return result.joinToString(".")
     }
 
-    private fun getSourceMethodName(name: String): String = name.split("$")[0]
-
     private fun formatFirstLine(info: Info, line: String): String {
         val color = getColor(info)
-        val location = if (config.printLocation) {
-            val methodName = getSourceMethodName(info.sourceMethodName)
-            val logger = info.logger.name.stretch(config.classNameLength, false)
-            val method = methodName.stretch(config.methodNameLength, true)
-            " [$logger.$method]"
+        val location = if (printLocation) {
+            val source = info.sourceFileName.stretch(fileNameLength, false)
+            val method = info.sourceMethodName.stretch(methodNameLength, true)
+            val number = "%-4d".format(info.sourceLineNumber)
+            " $source:$number $method"
         } else emptyString
-        val level = names[info.level]?.stretch(config.levelLength)!!
-        val time = config.dateFormat.format(Date(info.millis))
-        return "$color$time $level$location: $line$resetChar\n"
+        val level = "${info.level}".stretch(levelLength)
+        val time = sdf.format(Date(info.millis))
+        return "$color$time $level$location $line$resetChar\n"
     }
 
     private fun formatOtherLines(info: Info, others: List<String>) =

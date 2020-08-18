@@ -3,13 +3,13 @@ package ru.inforion.lab403.common.logging.common
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import ru.inforion.lab403.common.logging.formatters.ColorFormatter
+import ru.inforion.lab403.common.logging.formatters.BasicFormatter
 import ru.inforion.lab403.common.logging.handlers.AbstractHandler
-import ru.inforion.lab403.common.logging.handlers.StreamHandler
+import ru.inforion.lab403.common.logging.handlers.WriterHandler
 import ru.inforion.lab403.common.logging.logLevel
 import java.io.File
-import java.text.SimpleDateFormat
 import java.util.logging.Level
+import kotlin.concurrent.thread
 
 /**
  * Created by batman on 12/06/16.
@@ -17,14 +17,6 @@ import java.util.logging.Level
 object Logging {
     private const val loggingConfPathVariable = "INFORION_LOGGING_CONF_PATH"
     private const val loggingConfDebugVariable = "INFORION_LOGGING_PRINT"
-
-    private val config = ColorFormatter.Config(
-        levelLength = 6,
-        classNameLength = 15,
-        methodNameLength = 16,
-        printLocation = true,
-        dateFormat = SimpleDateFormat("HH:mm:ss")
-    )
 
     private var loggingConfDebug = false
 
@@ -99,9 +91,21 @@ object Logging {
 
     private val loggers = mutableMapOf<String, Logger>()
 
+    private val runtime = Runtime.getRuntime()
+
+    private val stdout = System.out.bufferedWriter()
+
+    var defaultHandlerFactory: () -> AbstractHandler = {
+        WriterHandler(stdout, BasicFormatter())
+    }
+
+    private val shutdownHook = thread(false) {
+        loggers.forEach { it.value.flush() }
+    }
+
     fun create(name: String, level: Level) = loggers.getOrPut(name) {
         val actual = logLevel(name, level)
-        val stdout = StreamHandler(System.out, ColorFormatter(config))
+        val stdout = defaultHandlerFactory()
         Logger(name, actual, stdout)
     }
 
@@ -110,4 +114,8 @@ object Logging {
     fun addHandler(handler: AbstractHandler) = loggers.values.forEach { it.addHandler(handler) }
 
     fun removeHandler(handler: AbstractHandler) = loggers.values.forEach { it.removeHandler(handler) }
+
+    init {
+        runtime.addShutdownHook(shutdownHook)
+    }
 }
