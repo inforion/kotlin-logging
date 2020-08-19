@@ -14,7 +14,7 @@ class BasicFormatter: AbstractFormatter() {
     companion object {
         const val levelLength = 7
         const val methodNameLength = 15
-        const val fileNameLength = 12
+        const val fileNameLength = 15
         const val lineNumberLength = 4
         const val printLocation = true
 
@@ -51,8 +51,8 @@ class BasicFormatter: AbstractFormatter() {
 
     private inline fun formatMethodName(name: String): String {
         if (name.length > methodNameLength) {
-            val stretched = name.stretch(methodNameLength - 3, true)
-            return "$stretched..."
+            val stretched = name.stretch(methodNameLength - 2, true)
+            return "$stretched.."
         }
 
         return name.stretch(methodNameLength, true)
@@ -68,7 +68,7 @@ class BasicFormatter: AbstractFormatter() {
             val number = formatLineNumber(info.sourceLineNumber)
             " $source:$number $method"
         } else emptyString
-        val level = "${info.level}".stretch(levelLength)
+        val level = info.level.name.stretch(levelLength)
         val time = sdf.format(Date(info.millis))
         return "$color$time $level$location $line$resetChar\n"
     }
