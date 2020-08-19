@@ -5,13 +5,13 @@ import ru.inforion.lab403.common.logging.common.Info
 import ru.inforion.lab403.common.logging.formatters.AbstractFormatter
 
 abstract class AbstractHandler constructor(private val formatter: AbstractFormatter = BasicFormatter()) {
-    fun log(message: String, info: Info, flush: Boolean) {
-        val formatted = formatter.format(message, info)
+    fun log(info: Info, flush: Boolean) {
+        val formatted = formatter.format(info)
         publish(formatted, info)
         if (flush) flush()
     }
 
-    abstract fun publish(message: String, info: Info)
+    abstract fun publish(line: String, info: Info)
 
     abstract fun flush()
 }
