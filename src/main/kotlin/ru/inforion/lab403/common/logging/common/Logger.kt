@@ -25,22 +25,23 @@ class Logger(val name: String, @JvmField val level: LogLevel, vararg handlers: A
 
     inline fun isLoggable(current: LogLevel) = current >= level && level != OFF
 
-    inline fun log(level: LogLevel, flush: Boolean, message: () -> String) {
+    inline fun <T: Any> log(level: LogLevel, flush: Boolean, message: () -> T) {
         if (!isLoggable(level)) return
-        doLog(level, message(), flush)
+        val string = message()
+        doLog(level, string.toString(), flush)
     }
 
-    inline fun severe(flush: Boolean = false, message: () -> String) = log(SEVERE, flush, message)
+    inline fun <T: Any> severe(flush: Boolean = false, message: () -> T) = log(SEVERE, flush, message)
 
-    inline fun warning(flush: Boolean = false, message: () -> String) = log(WARNING, flush, message)
+    inline fun <T: Any> warning(flush: Boolean = false, message: () -> T) = log(WARNING, flush, message)
 
-    inline fun info(flush: Boolean = false, message: () -> String) = log(INFO, flush, message)
+    inline fun <T: Any> info(flush: Boolean = false, message: () -> T) = log(INFO, flush, message)
 
-    inline fun config(flush: Boolean = false, message: () -> String) = log(CONFIG, flush, message)
+    inline fun <T: Any> config(flush: Boolean = false, message: () -> T) = log(CONFIG, flush, message)
 
-    inline fun fine(flush: Boolean = false, message: () -> String) = log(FINE, flush, message)
+    inline fun <T: Any> fine(flush: Boolean = false, message: () -> T) = log(FINE, flush, message)
 
-    inline fun finer(flush: Boolean = false, message: () -> String) = log(FINER, flush, message)
+    inline fun <T: Any> finer(flush: Boolean = false, message: () -> T) = log(FINER, flush, message)
 
-    inline fun finest(flush: Boolean = false, message: () -> String) = log(FINEST, flush, message)
+    inline fun <T: Any> finest(flush: Boolean = false, message: () -> T) = log(FINEST, flush, message)
 }

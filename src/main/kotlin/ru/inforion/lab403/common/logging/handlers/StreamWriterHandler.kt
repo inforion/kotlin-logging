@@ -5,7 +5,14 @@ import ru.inforion.lab403.common.logging.formatters.AbstractFormatter
 import java.io.Writer
 
 class StreamWriterHandler(private val writer: Writer, formatter: AbstractFormatter) : AbstractHandler(formatter) {
-    override fun publish(message: String, info: Info) = writer.write(message)
+    companion object {
+        var flushOnPublish = true
+    }
+
+    override fun publish(message: String, info: Info) {
+        writer.write(message)
+        if (flushOnPublish) flush()
+    }
 
     override fun flush() = writer.flush()
 }

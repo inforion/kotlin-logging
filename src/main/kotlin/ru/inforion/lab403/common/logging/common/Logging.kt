@@ -35,8 +35,7 @@ object Logging {
                 val loggingConfPath = System.getenv(loggingConfPathVariable)
                 println("$loggingConfPathVariable: $loggingConfPath")
                 if (loggingConfPath == null) {
-                    state =
-                        State.NOT_SPECIFIED
+                    state = State.NOT_SPECIFIED
                     return default
                 }
 
@@ -44,8 +43,7 @@ object Logging {
                 if (!confFile.isFile) {
                     if (loggingConfDebug)
                         println("Logging configuration file can't be loaded: $confFile")
-                    state =
-                        State.NOT_SPECIFIED
+                    state = State.NOT_SPECIFIED
                     return default
                 }
 
@@ -58,17 +56,13 @@ object Logging {
                 } catch (e: Exception) {
                     if (loggingConfDebug)
                         println("Can't parse log level configuration file $confFile due to $e")
-                    state =
-                        State.NOT_SPECIFIED
+                    state = State.NOT_SPECIFIED
                     return default
                 }
-                state =
-                    State.LOADED
-                return getActualLevel(
-                    name,
-                    default
-                )
+                state = State.LOADED
+                return getActualLevel(name, default)
             }
+
             State.LOADED -> return if (loggingConfDebug) {
                 val result = loggingLevels[name]
                 if (result == null) {
@@ -79,6 +73,7 @@ object Logging {
                     result
                 }
             } else loggingLevels.getOrDefault(name, default)
+
             State.NOT_SPECIFIED -> {
                 if (loggingConfDebug)
                     println("Conf not loaded, using default value for $name -> $default")
@@ -91,15 +86,11 @@ object Logging {
 
     private val runtime = Runtime.getRuntime()
 
-    private val stdout = System.out.bufferedWriter()
+    private val stdout = System.out.writer()
 
-    var defaultHandlerFactory: () -> AbstractHandler = {
-        StreamWriterHandler(stdout, BasicFormatter())
-    }
+    var defaultHandlerFactory: () -> AbstractHandler = { StreamWriterHandler(stdout, BasicFormatter()) }
 
-    private val shutdownHook = thread(false) {
-        loggers.forEach { it.value.flush() }
-    }
+    private val shutdownHook = thread(false) { flush() }.also { runtime.addShutdownHook(it) }
 
     fun create(name: String, level: LogLevel) = loggers.getOrPut(name) {
         val actual = getActualLevel(name, level)
@@ -113,7 +104,5 @@ object Logging {
 
     fun removeHandler(handler: AbstractHandler) = loggers.values.forEach { it.removeHandler(handler) }
 
-    init {
-        runtime.addShutdownHook(shutdownHook)
-    }
+    fun flush() = loggers.values.forEach { it.flush() }
 }
