@@ -1,14 +1,9 @@
 package ru.inforion.lab403.common.logging.common
 
 import ru.inforion.lab403.common.logging.handlers.AbstractHandler
-import java.util.logging.Level
-import java.util.logging.Level.*
 
-class Logger(val name: String, level: Level, vararg handlers: AbstractHandler) {
-
-    private val offValue = OFF.intValue()
-    private val levelValue = level.intValue()
-
+@Suppress("NOTHING_TO_INLINE")
+class Logger(val name: String, @JvmField val level: LogLevel, vararg handlers: AbstractHandler) {
     private val handlers = handlers.toMutableSet()
 
     fun flush() = handlers.forEach { it.flush() }
@@ -21,31 +16,31 @@ class Logger(val name: String, level: Level, vararg handlers: AbstractHandler) {
 
     private fun caller() = Thread.currentThread().stackTrace[3]
 
-    fun doLog(level: Level, message: String) {
+    fun doLog(level: LogLevel, message: String, flush: Boolean) {
         val time = millis()
         val caller = caller()
         val info = Info(this, level, time, caller)
-        handlers.forEach { it.log(message, info) }
+        handlers.forEach { it.log(message, info, flush) }
     }
 
-    fun isLoggable(level: Level) = level.intValue() >= levelValue && levelValue != offValue
+    inline fun isLoggable(current: LogLevel) = current >= level && level != OFF
 
-    inline fun log(level: Level, message: () -> String) {
+    inline fun log(level: LogLevel, flush: Boolean, message: () -> String) {
         if (!isLoggable(level)) return
-        doLog(level, message())
+        doLog(level, message(), flush)
     }
 
-    inline fun severe(message: () -> String) = log(SEVERE, message)
+    inline fun severe(flush: Boolean = false, message: () -> String) = log(SEVERE, flush, message)
 
-    inline fun warning(message: () -> String) = log(WARNING, message)
+    inline fun warning(flush: Boolean = false, message: () -> String) = log(WARNING, flush, message)
 
-    inline fun info(message: () -> String) = log(INFO, message)
+    inline fun info(flush: Boolean = false, message: () -> String) = log(INFO, flush, message)
 
-    inline fun config(message: () -> String) = log(CONFIG, message)
+    inline fun config(flush: Boolean = false, message: () -> String) = log(CONFIG, flush, message)
 
-    inline fun fine(message: () -> String) = log(FINE, message)
+    inline fun fine(flush: Boolean = false, message: () -> String) = log(FINE, flush, message)
 
-    inline fun finer(message: () -> String) = log(FINER, message)
+    inline fun finer(flush: Boolean = false, message: () -> String) = log(FINER, flush, message)
 
-    inline fun finest(message: () -> String) = log(FINEST, message)
+    inline fun finest(flush: Boolean = false, message: () -> String) = log(FINEST, flush, message)
 }

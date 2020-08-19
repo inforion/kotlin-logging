@@ -2,6 +2,7 @@ package ru.inforion.lab403.common.logging
 
 import ru.inforion.lab403.common.logging.common.Logger
 import ru.inforion.lab403.common.logging.common.Logging
+import ru.inforion.lab403.common.logging.common.logLevel
 import java.util.logging.Level
 import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObject
@@ -9,7 +10,7 @@ import kotlin.reflect.full.companionObject
 // Return logger for Java class, if companion object fix the name
 fun <T: Any> logger(forClass: Class<T>, level: Level): Logger {
     val klass = unwrapCompanionClass(forClass)
-    return Logging.create(klass, level)
+    return Logging.create(klass, level.logLevel())
 }
 
 // unwrap companion class to enclosing class given a Java Class

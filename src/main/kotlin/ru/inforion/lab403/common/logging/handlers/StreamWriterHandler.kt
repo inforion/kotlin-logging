@@ -1,11 +1,10 @@
 package ru.inforion.lab403.common.logging.handlers
 
-import ru.inforion.lab403.common.logging.formatters.BasicFormatter
 import ru.inforion.lab403.common.logging.common.Info
-import java.io.OutputStream
+import ru.inforion.lab403.common.logging.formatters.AbstractFormatter
 import java.io.Writer
 
-class WriterHandler(private val writer: Writer, formatter: BasicFormatter) : AbstractHandler(formatter) {
+class StreamWriterHandler(private val writer: Writer, formatter: AbstractFormatter) : AbstractHandler(formatter) {
     override fun publish(message: String, info: Info) = writer.write(message)
 
     override fun flush() = writer.flush()

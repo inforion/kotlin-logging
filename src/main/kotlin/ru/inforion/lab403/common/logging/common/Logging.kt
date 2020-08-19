@@ -5,10 +5,8 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import ru.inforion.lab403.common.logging.formatters.BasicFormatter
 import ru.inforion.lab403.common.logging.handlers.AbstractHandler
-import ru.inforion.lab403.common.logging.handlers.WriterHandler
-import ru.inforion.lab403.common.logging.logLevel
+import ru.inforion.lab403.common.logging.handlers.StreamWriterHandler
 import java.io.File
-import java.util.logging.Level
 import kotlin.concurrent.thread
 
 /**
@@ -20,13 +18,13 @@ object Logging {
 
     private var loggingConfDebug = false
 
-    private val loggingLevels = mutableMapOf<String, Level>()
+    private val loggingLevels = mutableMapOf<String, LogLevel>()
 
     private enum class State { INIT, LOADED, NOT_SPECIFIED }
 
     private var state = State.INIT
 
-    fun logLevel(name: String, default: Level): Level {
+    private fun getActualLevel(name: String, default: LogLevel): LogLevel {
         when (state) {
             State.INIT -> {
                 val loggingConfDebugString = System.getenv(loggingConfDebugVariable)
@@ -66,7 +64,7 @@ object Logging {
                 }
                 state =
                     State.LOADED
-                return logLevel(
+                return getActualLevel(
                     name,
                     default
                 )
@@ -96,20 +94,20 @@ object Logging {
     private val stdout = System.out.bufferedWriter()
 
     var defaultHandlerFactory: () -> AbstractHandler = {
-        WriterHandler(stdout, BasicFormatter())
+        StreamWriterHandler(stdout, BasicFormatter())
     }
 
     private val shutdownHook = thread(false) {
         loggers.forEach { it.value.flush() }
     }
 
-    fun create(name: String, level: Level) = loggers.getOrPut(name) {
-        val actual = logLevel(name, level)
+    fun create(name: String, level: LogLevel) = loggers.getOrPut(name) {
+        val actual = getActualLevel(name, level)
         val stdout = defaultHandlerFactory()
         Logger(name, actual, stdout)
     }
 
-    fun <T> create(klass: Class<T>, level: Level) = create(klass.simpleName, level)
+    fun <T> create(klass: Class<T>, level: LogLevel) = create(klass.simpleName, level)
 
     fun addHandler(handler: AbstractHandler) = loggers.values.forEach { it.addHandler(handler) }
 
