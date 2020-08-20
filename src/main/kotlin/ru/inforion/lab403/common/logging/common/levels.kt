@@ -2,7 +2,6 @@ package ru.inforion.lab403.common.logging.common
 
 import java.util.logging.Level
 
-typealias LogLevel = Int
 
 const val OFF  = Int.MAX_VALUE
 const val SEVERE  = 1000

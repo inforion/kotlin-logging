@@ -1,17 +1,9 @@
 package ru.inforion.lab403.common.logging.handlers
 
-import ru.inforion.lab403.common.logging.formatters.BasicFormatter
-import ru.inforion.lab403.common.logging.common.Info
-import ru.inforion.lab403.common.logging.formatters.AbstractFormatter
+import ru.inforion.lab403.common.logging.common.Record
 
-abstract class AbstractHandler constructor(private val formatter: AbstractFormatter = BasicFormatter()) {
-    fun log(info: Info, flush: Boolean) {
-        val formatted = formatter.format(info)
-        publish(formatted, info)
-        if (flush) flush()
-    }
-
-    abstract fun publish(line: String, info: Info)
+abstract class AbstractHandler {
+    abstract fun publish(record: Record)
 
     abstract fun flush()
 }

@@ -3,7 +3,7 @@ package ru.inforion.lab403.common.logging.common
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import ru.inforion.lab403.common.logging.formatters.BasicFormatter
+import ru.inforion.lab403.common.logging.formatters.IntelliColorFormatter
 import ru.inforion.lab403.common.logging.handlers.AbstractHandler
 import ru.inforion.lab403.common.logging.handlers.StreamWriterHandler
 import java.io.File
@@ -88,7 +88,7 @@ object Logging {
 
     private val stdout = System.out.writer()
 
-    var defaultHandlerFactory: () -> AbstractHandler = { StreamWriterHandler(stdout, BasicFormatter()) }
+    var defaultHandlerFactory: () -> AbstractHandler = { StreamWriterHandler(stdout, IntelliColorFormatter()) }
 
     private val shutdownHook = thread(false) { flush() }.also { runtime.addShutdownHook(it) }
 

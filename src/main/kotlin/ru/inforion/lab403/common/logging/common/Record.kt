@@ -1,7 +1,7 @@
 package ru.inforion.lab403.common.logging.common
 
-class Info constructor(
-    val logger: Logger,
+class Record constructor(
+    val name: String,
     val message: String,
     val level: LogLevel,
     val millis: Long,
