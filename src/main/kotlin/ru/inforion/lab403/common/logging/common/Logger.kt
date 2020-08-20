@@ -1,6 +1,7 @@
 package ru.inforion.lab403.common.logging.common
 
 import ru.inforion.lab403.common.logging.handlers.AbstractHandler
+import java.util.logging.Level
 
 @Suppress("NOTHING_TO_INLINE")
 class Logger(val name: String, @JvmField val level: LogLevel, vararg handlers: AbstractHandler) {
@@ -33,10 +34,14 @@ class Logger(val name: String, @JvmField val level: LogLevel, vararg handlers: A
         }
     }
 
-    inline fun <T:Any> log(level: LogLevel, flush: Boolean, message: Messenger<T>) {
+    inline fun <T:Any> log(level: LogLevel, flush: Boolean = false, message: Messenger<T>) {
         if (!isLoggable(level)) return
         log(level, flush, message().toString())
     }
+
+    // compat
+    inline fun <T:Any> log(level: Level, flush: Boolean = false, message: Messenger<T>) =
+        log(level.logLevel(), flush, message)
 
     inline fun <T: Any> severe(flush: Boolean = false, message: Messenger<T>) = log(SEVERE, flush, message)
 
