@@ -9,8 +9,8 @@ class StreamWriterHandler(private val writer: Writer, formatter: AbstractFormatt
         var flushOnPublish = true
     }
 
-    override fun publish(message: String, info: Info) {
-        writer.write(message)
+    override fun publish(line: String, info: Info) {
+        writer.write(line)
         if (flushOnPublish) flush()
     }
 

@@ -19,8 +19,8 @@ class Logger(val name: String, @JvmField val level: LogLevel, vararg handlers: A
     fun doLog(level: LogLevel, message: String, flush: Boolean) {
         val time = millis()
         val caller = caller()
-        val info = Info(this, level, time, caller)
-        handlers.forEach { it.log(message, info, flush) }
+        val info = Info(this, message, level, time, caller)
+        handlers.forEach { it.log(info, flush) }
     }
 
     inline fun isLoggable(current: LogLevel) = current >= level && level != OFF

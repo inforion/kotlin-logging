@@ -6,7 +6,6 @@ import ru.inforion.lab403.common.logging.common.*
 import ru.inforion.lab403.common.logging.common.OperatingSystem
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.logging.Level
 
 @Suppress("NOTHING_TO_INLINE")
 class BasicFormatter: AbstractFormatter() {
@@ -14,7 +13,7 @@ class BasicFormatter: AbstractFormatter() {
     companion object {
         const val levelLength = 7
         const val methodNameLength = 15
-        const val fileNameLength = 15
+        const val fileNameLength = 21
         const val lineNumberLength = 4
         const val printLocation = true
 
@@ -66,7 +65,7 @@ class BasicFormatter: AbstractFormatter() {
             val source = formatFileName(info.sourceFileName)
             val method = formatMethodName(info.sourceMethodName)
             val number = formatLineNumber(info.sourceLineNumber)
-            " $source:$number $method"
+            "[$source:$number $method]"
         } else emptyString
         val level = info.level.name.stretch(levelLength)
         val time = sdf.format(Date(info.millis))
@@ -76,15 +75,15 @@ class BasicFormatter: AbstractFormatter() {
     private fun formatOtherLines(info: Info, others: List<String>) =
             others.joinToString("\n") { "${getColor(info.level)}$it$resetChar" }
 
-    override fun format(message: String, info: Info): String {
-        val lines = message.lines()
+    override fun format(info: Info): String {
+        val lines = info.message.lines()
         return if (lines.size > 1) {
             // need to added character color for all lines
             val first = formatFirstLine(info, lines.first())
             val others = formatOtherLines(info, lines.drop(1))
             "$first$others\n"
         } else {
-            formatFirstLine(info, message)
+            formatFirstLine(info, info.message)
         }
     }
 }
