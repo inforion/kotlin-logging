@@ -4,7 +4,7 @@ import ru.inforion.lab403.common.logging.handlers.AbstractHandler
 import java.util.logging.Level
 
 @Suppress("NOTHING_TO_INLINE")
-class Logger(val name: String, @JvmField val level: LogLevel, vararg handlers: AbstractHandler) {
+class Logger(val name: String, @JvmField var level: LogLevel, vararg handlers: AbstractHandler) {
     companion object {
         const val STACK_TRACE_CALLER_INDEX = 3
     }
