@@ -13,6 +13,7 @@ import kotlin.concurrent.thread
 class Logger private constructor(
     val name: String,
     @JvmField var level: LogLevel,
+    var flushOnPublish: Boolean = true,
     vararg publishers: AbstractPublisher
 ) {
     companion object {
@@ -36,9 +37,11 @@ class Logger private constructor(
         private val levels = Config()
 
         /**
-         * Flush for all handlers and all loggers any record immediately when publish it
+         * Change all loggers [flushOnPublish]
+         *
+         * @param value if true - all loggers will flush any record immediately when publish it
          */
-        var flushOnPublish = true
+        fun flushOnPublish(value: Boolean) = loggers.values.forEach { it.flushOnPublish = value }
 
         /**
          * Create new logger by name with specified publishers or get it (logger) if it already exist for the class
@@ -49,9 +52,9 @@ class Logger private constructor(
          * @param level level of logging message below it will not be published
          * @param publishers list of publishers
          */
-        fun create(name: String, level: LogLevel, vararg publishers: AbstractPublisher) = loggers.getOrPut(name) {
+        fun create(name: String, level: LogLevel, flush: Boolean, vararg publishers: AbstractPublisher) = loggers.getOrPut(name) {
             val actual = levels[name, level]
-            Logger(name, actual, *publishers)
+            Logger(name, actual, flush, *publishers)
         }
 
         /**
@@ -63,8 +66,8 @@ class Logger private constructor(
          * @param level level of logging message below it will not be published
          * @param publishers list of publishers
          */
-        fun <T> create(klass: Class<T>, level: LogLevel, vararg publishers: AbstractPublisher) =
-            create(klass.simpleName, level, *publishers)
+        fun <T> create(klass: Class<T>, level: LogLevel, flush: Boolean, vararg publishers: AbstractPublisher) =
+            create(klass.simpleName, level, flush, *publishers)
 
         /**
          * Add new publisher to all loggers

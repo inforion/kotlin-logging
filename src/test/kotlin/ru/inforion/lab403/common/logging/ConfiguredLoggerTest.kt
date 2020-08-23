@@ -1,13 +1,14 @@
 package ru.inforion.lab403.common.logging
 
 import org.junit.Test
+import ru.inforion.lab403.common.extensions.mkdirs
 import ru.inforion.lab403.common.extensions.toFile
 import ru.inforion.lab403.common.logging.formatters.ColorMultilineFormatter
 import ru.inforion.lab403.common.logging.formatters.IntelliColorFormatter
 import ru.inforion.lab403.common.logging.formatters.WithoutChange
 
 
-internal class LoggersTest {
+internal class ConfiguredLoggerTest {
     @Test
     fun test1() {
         val log = logger(ALL) {
@@ -41,7 +42,7 @@ internal class LoggersTest {
 
             stderr()
 
-            file("mew".toFile(), IntelliColorFormatter(WithoutChange))
+            file("temp/mew".toFile().also { it.parent.mkdirs() }, IntelliColorFormatter(WithoutChange))
 
             writer("test") {
 
