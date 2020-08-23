@@ -10,7 +10,7 @@ class FormatterConfig : AbstractConfig<AbstractFormatter> {
      */
     private var onFormat: AbstractFormatter.(message: String, record: Record) -> String = { message, _ -> message }
 
-    override fun generate() = object : AbstractFormatter() {
+    override fun generate() = object : AbstractFormatter {
         override fun format(message: String, record: Record): String = onFormat(message, record)
     }
 

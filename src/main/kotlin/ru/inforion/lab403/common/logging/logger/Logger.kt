@@ -2,10 +2,7 @@
 
 package ru.inforion.lab403.common.logging.logger
 
-import ru.inforion.lab403.common.logging.LogLevel
-import ru.inforion.lab403.common.logging.Messenger
-import ru.inforion.lab403.common.logging.OFF
-import ru.inforion.lab403.common.logging.logLevel
+import ru.inforion.lab403.common.logging.*
 import ru.inforion.lab403.common.logging.publishers.AbstractPublisher
 import java.util.logging.Level
 import kotlin.concurrent.thread
@@ -112,8 +109,6 @@ class Logger private constructor(
      */
     fun flush() = handlers.forEach { it.flush() }
 
-    inline fun isLoggable(current: LogLevel) = current >= level && level != OFF
-
     @PublishedApi
     internal fun log(level: LogLevel, flush: Boolean, message: String) {
         val timestamp = System.currentTimeMillis()
@@ -133,11 +128,24 @@ class Logger private constructor(
      * @param message message supplier
      */
     inline fun <T:Any> log(level: LogLevel, flush: Boolean = false, message: Messenger<T>) {
-        if (!isLoggable(level)) return
-        log(level, flush, message().toString())
+        if (this.level permit level) log(level, flush, message().toString())
     }
 
     @Deprecated("please use log(level: LogLevel, ...)")
     inline fun <T:Any> log(level: Level, flush: Boolean = false, message: Messenger<T>) =
         log(level.logLevel(), flush, message)
+
+    inline fun <T: Any> severe(flush: Boolean = false, message: Messenger<T>) = log(SEVERE, flush, message)
+
+    inline fun <T: Any> warning(flush: Boolean = false, message: Messenger<T>) = log(WARNING, flush, message)
+
+    inline fun <T: Any> info(flush: Boolean = false, message: Messenger<T>) = log(INFO, flush, message)
+
+    inline fun <T: Any> config(flush: Boolean = false, message: Messenger<T>) = log(CONFIG, flush, message)
+
+    inline fun <T: Any> fine(flush: Boolean = false, message: Messenger<T>) = log(FINE, flush, message)
+
+    inline fun <T: Any> finer(flush: Boolean = false, message: Messenger<T>) = log(FINER, flush, message)
+
+    inline fun <T: Any> finest(flush: Boolean = false, message: Messenger<T>) = log(FINEST, flush, message)
 }

@@ -1,11 +1,14 @@
 package ru.inforion.lab403.common.logging.dsl
 
+import ru.inforion.lab403.common.logging.ALL
+import ru.inforion.lab403.common.logging.LogLevel
 import ru.inforion.lab403.common.logging.logger.Record
 import ru.inforion.lab403.common.logging.formatters.AbstractFormatter
+import ru.inforion.lab403.common.logging.permit
 import ru.inforion.lab403.common.logging.publishers.AbstractPublisher
 
 
-class PublisherConfig(val name: String) : AbstractConfig<AbstractPublisher> {
+class PublisherConfig(val name: String, val level: LogLevel = ALL) : AbstractConfig<AbstractPublisher> {
     /**
      * Function called when publish record
      */
@@ -24,8 +27,10 @@ class PublisherConfig(val name: String) : AbstractConfig<AbstractPublisher> {
         private val formatter = formatterConfig?.generate()
 
         override fun publish(message: String, record: Record) {
-            val formatted = formatter?.format(message, record) ?: message
-            onPublish(formatted, record)
+            if (level permit record.level) {
+                val formatted = formatter?.format(message, record) ?: message
+                onPublish(formatted, record)
+            }
         }
 
         override fun flush() = onFlush()

@@ -4,7 +4,7 @@ import ru.inforion.lab403.common.extensions.os
 import ru.inforion.lab403.common.logging.*
 import ru.inforion.lab403.common.logging.logger.Record
 
-object ColorMultilineFormatter: AbstractFormatter() {
+object ColorMultiline: AbstractFormatter {
 
     const val ANSI_RESET = "\u001B[0m"
     const val ANSI_BLACK = "\u001B[30m"

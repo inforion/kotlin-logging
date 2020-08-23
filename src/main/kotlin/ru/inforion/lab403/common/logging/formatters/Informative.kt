@@ -8,7 +8,7 @@ import ru.inforion.lab403.common.logging.logger.Record
 import java.text.SimpleDateFormat
 import java.util.*
 
-class IntelliColorFormatter(val painter: AbstractFormatter = ColorMultilineFormatter): AbstractFormatter() {
+class Informative(val painter: AbstractFormatter = ColorMultiline): AbstractFormatter {
 
     companion object {
         var locationLength = 50

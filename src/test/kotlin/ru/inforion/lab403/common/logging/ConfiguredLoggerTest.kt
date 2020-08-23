@@ -1,18 +1,19 @@
 package ru.inforion.lab403.common.logging
 
 import org.junit.Test
-import ru.inforion.lab403.common.extensions.mkdirs
 import ru.inforion.lab403.common.extensions.toFile
-import ru.inforion.lab403.common.logging.formatters.ColorMultilineFormatter
-import ru.inforion.lab403.common.logging.formatters.IntelliColorFormatter
-import ru.inforion.lab403.common.logging.formatters.WithoutChange
+import ru.inforion.lab403.common.logging.formatters.ColorMultiline
+import ru.inforion.lab403.common.logging.formatters.Informative
+import ru.inforion.lab403.common.logging.formatters.Newline
+import ru.inforion.lab403.common.logging.formatters.Absent
+import ru.inforion.lab403.common.logging.publishers.BeautifulPublisher
 
 
 internal class ConfiguredLoggerTest {
     @Test
     fun test1() {
         val log = logger(ALL) {
-            publisher("stderr2") {
+            publisher("stderr2", SEVERE) {
                 val writer = System.err.writer()
 
                 formatter {
@@ -26,10 +27,10 @@ internal class ConfiguredLoggerTest {
                 flush { writer.flush() }
             }
 
-            publisher("stdout1") {
+            publisher("stdout1", WARNING) {
                 val writer = System.out.writer()
 
-                formatter(ColorMultilineFormatter)
+                formatter(ColorMultiline)
 
                 publish { message, record ->
                     writer.write("logger = ${record.logger} publisher = $name -> $message\n")
@@ -38,36 +39,27 @@ internal class ConfiguredLoggerTest {
                 flush { writer.flush() }
             }
 
-            stdout()
+            stdout(CONFIG)
+            stderr(INFO)
 
-            stderr()
+            publisher(BeautifulPublisher.stdout(FINE, Newline))
 
-            file("temp/mew".toFile().also { it.parent.mkdirs() }, IntelliColorFormatter(WithoutChange))
-
-            writer("test") {
-
+            writer("test", FINER) {
+                println("printer writer -> $it")
             }
+
+            "temp".toFile().mkdirs()
+
+            file("temp/mew_rewrite".toFile(), false, FINER, Informative(Absent))
+            file("temp/mew_append".toFile(), true, WARNING, Informative(Absent))
         }
 
         log.severe { "Print zero severe message" }
-        println()
-
         log.warning { "Print the first warning message" }
-        println()
-
         log.info { "Print the second info message" }
-        println()
-
         log.config { "Print the third config message" }
-        println()
-
-        log.fine { "Print the forth finer message" }
-        println()
-
+        log.fine { "Print the forth fine message" }
         log.finer { "Print the fifth finer message" }
-        println()
-
         log.finest { "Print the six finest message" }
-        println()
     }
 }

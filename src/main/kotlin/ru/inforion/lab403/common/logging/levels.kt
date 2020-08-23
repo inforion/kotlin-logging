@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package ru.inforion.lab403.common.logging
 
 import java.util.logging.Level
@@ -52,3 +54,5 @@ val LogLevel.name get() = when (this) {
     ALL -> "ALL"
     else -> error("Can't get level name for $this")
 }
+
+inline infix fun LogLevel.permit(other: LogLevel) = other >= this && this != OFF

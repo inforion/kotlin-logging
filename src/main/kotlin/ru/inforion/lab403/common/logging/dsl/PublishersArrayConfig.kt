@@ -1,5 +1,7 @@
 package ru.inforion.lab403.common.logging.dsl
 
+import ru.inforion.lab403.common.logging.ALL
+import ru.inforion.lab403.common.logging.LogLevel
 import ru.inforion.lab403.common.logging.formatters.AbstractFormatter
 import ru.inforion.lab403.common.logging.publishers.AbstractPublisher
 import ru.inforion.lab403.common.logging.publishers.BeautifulPublisher
@@ -17,10 +19,11 @@ class PublishersArrayConfig : AbstractConfig<Array<AbstractPublisher>> {
      * Appends publisher configured using current DSL
      *
      * @param name name of publisher (some identifier - does nothing)
+     * @param level publisher log level
      * @param function publisher configuration
      */
-    fun publisher(name: String = "publisher", function: PublisherConfig.() -> Unit) = append {
-        PublisherConfig(name).also { function(it) }
+    fun publisher(name: String = "publisher", level: LogLevel = ALL, function: PublisherConfig.() -> Unit) = append {
+        PublisherConfig(name, level).also { function(it) }
     }
 
     /**
@@ -33,40 +36,52 @@ class PublishersArrayConfig : AbstractConfig<Array<AbstractPublisher>> {
     /**
      * Appends stdout formatted publisher to publishers array's configuration
      *
+     * @param level stdout publisher log level
      * @param formatter stdout publisher formatter
      */
-    fun stdout(formatter: AbstractFormatter = BeautifulPublisher.defaultFormatter) = append {
-        AbstractConfig { BeautifulPublisher.stdout(formatter) }
+    fun stdout(level: LogLevel = ALL, formatter: AbstractFormatter = BeautifulPublisher.defaultFormatter) = append {
+        AbstractConfig { BeautifulPublisher.stdout(level, formatter) }
     }
 
     /**
      * Appends stderr formatted publisher to publishers array's configuration
      *
+     * @param level stderr publisher log level
      * @param formatter stderr publisher formatter
      */
-    fun stderr(formatter: AbstractFormatter = BeautifulPublisher.defaultFormatter) = append {
-        AbstractConfig { BeautifulPublisher.stderr(formatter) }
+    fun stderr(level: LogLevel = ALL, formatter: AbstractFormatter = BeautifulPublisher.defaultFormatter) = append {
+        AbstractConfig { BeautifulPublisher.stderr(level, formatter) }
     }
 
     /**
      * Appends file publisher to publishers array's configuration
      *
      * @param file file where to publish logs
+     * @param append append to existed file or rewrite file
+     * @param level file publisher log level
+     * @param formatter file publisher formatter
      */
-    fun file(file: File, formatter: AbstractFormatter = BeautifulPublisher.defaultFormatter) = append {
-        AbstractConfig { BeautifulPublisher.file(file, formatter) }
+    fun file(
+        file: File,
+        append: Boolean = false,
+        level: LogLevel = ALL,
+        formatter: AbstractFormatter = BeautifulPublisher.defaultFormatter
+    ) = append {
+        AbstractConfig { BeautifulPublisher.file(file, append, level, formatter) }
     }
 
     /**
      * Appends writer publisher to publishers array's configuration
      *
      * @param name name of publisher (some identifier - does nothing)
+     * @param level writer publisher log level
      * @param formatter writer publisher formatter (messages in [writer] will be passed after formatting)
      * @param writer what to do when writing messages
      */
     fun writer(
         name: String = "writer",
+        level: LogLevel = ALL,
         formatter: AbstractFormatter = BeautifulPublisher.defaultFormatter,
         writer: (message: String) -> Unit
-    ) = append { AbstractConfig { BeautifulPublisher.new(name, formatter, writer) } }
+    ) = append { AbstractConfig { BeautifulPublisher.new(name, level, formatter, writer) } }
 }
