@@ -1,11 +1,13 @@
-package ru.inforion.lab403.common.logging.common
+package ru.inforion.lab403.common.logging.logger
+
+import ru.inforion.lab403.common.logging.Caller
+import ru.inforion.lab403.common.logging.LogLevel
 
 class Record constructor(
-    val name: String,
-    val message: String,
+    val logger: Logger,
     val level: LogLevel,
     val millis: Long,
-    val caller: StackTraceElement
+    val caller: Caller
 ) {
     val sourceMethodName: String get() = caller.methodName
     val sourceClassName: String get() = caller.className

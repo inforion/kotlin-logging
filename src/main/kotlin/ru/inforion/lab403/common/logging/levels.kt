@@ -1,4 +1,4 @@
-package ru.inforion.lab403.common.logging.common
+package ru.inforion.lab403.common.logging
 
 import java.util.logging.Level
 
