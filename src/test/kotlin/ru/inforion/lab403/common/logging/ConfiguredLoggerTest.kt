@@ -6,7 +6,7 @@ import ru.inforion.lab403.common.logging.formatters.ColorMultiline
 import ru.inforion.lab403.common.logging.formatters.Informative
 import ru.inforion.lab403.common.logging.formatters.Newline
 import ru.inforion.lab403.common.logging.formatters.Absent
-import ru.inforion.lab403.common.logging.publishers.BeautifulPublisher
+import ru.inforion.lab403.common.logging.publishers.BeautyPublisher
 
 
 internal class ConfiguredLoggerTest {
@@ -42,7 +42,7 @@ internal class ConfiguredLoggerTest {
             stdout(CONFIG)
             stderr(INFO)
 
-            publisher(BeautifulPublisher.stdout(FINE, Newline))
+            publisher(BeautyPublisher.stdout(FINE, Newline))
 
             writer("test", FINER) {
                 println("printer writer -> $it")

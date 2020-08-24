@@ -4,7 +4,7 @@ import ru.inforion.lab403.common.logging.ALL
 import ru.inforion.lab403.common.logging.LogLevel
 import ru.inforion.lab403.common.logging.formatters.AbstractFormatter
 import ru.inforion.lab403.common.logging.publishers.AbstractPublisher
-import ru.inforion.lab403.common.logging.publishers.BeautifulPublisher
+import ru.inforion.lab403.common.logging.publishers.BeautyPublisher
 import java.io.File
 
 class PublishersArrayConfig : AbstractConfig<Array<AbstractPublisher>> {
@@ -39,8 +39,8 @@ class PublishersArrayConfig : AbstractConfig<Array<AbstractPublisher>> {
      * @param level stdout publisher log level
      * @param formatter stdout publisher formatter
      */
-    fun stdout(level: LogLevel = ALL, formatter: AbstractFormatter = BeautifulPublisher.defaultFormatter) = append {
-        AbstractConfig { BeautifulPublisher.stdout(level, formatter) }
+    fun stdout(level: LogLevel = ALL, formatter: AbstractFormatter = BeautyPublisher.defaultFormatter) = append {
+        AbstractConfig { BeautyPublisher.stdout(level, formatter) }
     }
 
     /**
@@ -49,8 +49,8 @@ class PublishersArrayConfig : AbstractConfig<Array<AbstractPublisher>> {
      * @param level stderr publisher log level
      * @param formatter stderr publisher formatter
      */
-    fun stderr(level: LogLevel = ALL, formatter: AbstractFormatter = BeautifulPublisher.defaultFormatter) = append {
-        AbstractConfig { BeautifulPublisher.stderr(level, formatter) }
+    fun stderr(level: LogLevel = ALL, formatter: AbstractFormatter = BeautyPublisher.defaultFormatter) = append {
+        AbstractConfig { BeautyPublisher.stderr(level, formatter) }
     }
 
     /**
@@ -65,9 +65,9 @@ class PublishersArrayConfig : AbstractConfig<Array<AbstractPublisher>> {
         file: File,
         append: Boolean = false,
         level: LogLevel = ALL,
-        formatter: AbstractFormatter = BeautifulPublisher.defaultFormatter
+        formatter: AbstractFormatter = BeautyPublisher.defaultFormatter
     ) = append {
-        AbstractConfig { BeautifulPublisher.file(file, append, level, formatter) }
+        AbstractConfig { BeautyPublisher.file(file, append, level, formatter) }
     }
 
     /**
@@ -81,7 +81,7 @@ class PublishersArrayConfig : AbstractConfig<Array<AbstractPublisher>> {
     fun writer(
         name: String = "writer",
         level: LogLevel = ALL,
-        formatter: AbstractFormatter = BeautifulPublisher.defaultFormatter,
+        formatter: AbstractFormatter = BeautyPublisher.defaultFormatter,
         writer: (message: String) -> Unit
-    ) = append { AbstractConfig { BeautifulPublisher.new(name, level, formatter, writer) } }
+    ) = append { AbstractConfig { BeautyPublisher.new(name, level, formatter, writer) } }
 }

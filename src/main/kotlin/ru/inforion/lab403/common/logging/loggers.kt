@@ -3,7 +3,7 @@ package ru.inforion.lab403.common.logging
 import ru.inforion.lab403.common.logging.dsl.PublishersArrayConfig
 import ru.inforion.lab403.common.logging.logger.Logger
 import ru.inforion.lab403.common.logging.publishers.AbstractPublisher
-import ru.inforion.lab403.common.logging.publishers.BeautifulPublisher
+import ru.inforion.lab403.common.logging.publishers.BeautyPublisher
 import java.util.logging.Level
 import kotlin.reflect.full.companionObject
 
@@ -25,7 +25,7 @@ internal fun <T: Any> logger(
     forClass: Class<T>,
     level: LogLevel,
     flush: Boolean,
-    vararg publishers: AbstractPublisher = arrayOf(BeautifulPublisher.stdout())
+    vararg publishers: AbstractPublisher = arrayOf(BeautyPublisher.stdout())
 ): Logger {
     val klass = unwrapCompanionClass(forClass)
     return Logger.create(klass, level, flush, *publishers)
@@ -42,7 +42,7 @@ internal fun <T: Any> logger(
 fun <T: Any> T.logger(
     level: LogLevel = FINE,
     flush: Boolean = true,
-    vararg publishers: AbstractPublisher = arrayOf(BeautifulPublisher.stdout())
+    vararg publishers: AbstractPublisher = arrayOf(BeautyPublisher.stdout())
 ) = logger(javaClass, level, flush, *publishers)
 
 /**

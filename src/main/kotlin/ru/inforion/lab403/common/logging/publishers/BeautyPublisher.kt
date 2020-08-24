@@ -11,7 +11,7 @@ import java.io.File
 import java.io.FileWriter
 import java.io.Writer
 
-class BeautifulPublisher constructor(
+class BeautyPublisher constructor(
     name: String,
     private val writer: Writer,
     private var level: LogLevel = ALL,
@@ -22,31 +22,31 @@ class BeautifulPublisher constructor(
         var defaultFormatter = Informative()
 
         fun stdout(level: LogLevel = ALL, formatter: AbstractFormatter = defaultFormatter) =
-            BeautifulPublisher("stdout", System.out.writer(), level, formatter)
+            BeautyPublisher("stdout", System.out.writer(), level, formatter)
 
         fun stderr(level: LogLevel = ALL, formatter: AbstractFormatter = defaultFormatter) =
-            BeautifulPublisher("stderr", System.err.writer(), level, formatter)
+            BeautyPublisher("stderr", System.err.writer(), level, formatter)
 
         fun file(
             file: File,
             append: Boolean = false,
             level: LogLevel = ALL,
             formatter: AbstractFormatter = defaultFormatter
-        ) = BeautifulPublisher("file", FileWriter(file, append).buffered(), level, formatter)
+        ) = BeautyPublisher("file", FileWriter(file, append).buffered(), level, formatter)
 
         fun new(
             name: String,
             level: LogLevel = ALL,
             formatter: AbstractFormatter = defaultFormatter,
             write: (message: String) -> Unit
-        ): BeautifulPublisher {
+        ): BeautyPublisher {
             val writer = object : Writer() {
                 override fun close() = error("close() should not be called!")
                 override fun flush() = Unit
                 override fun write(cbuf: CharArray, off: Int, len: Int) = error("write(cbuf) should not be called!")
                 override fun write(str: String) = write(str)
             }
-            return BeautifulPublisher(name, writer, level, formatter)
+            return BeautyPublisher(name, writer, level, formatter)
         }
     }
 
