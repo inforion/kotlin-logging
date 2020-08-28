@@ -3,7 +3,7 @@ package ru.inforion.lab403.common.logging.dsl
 import ru.inforion.lab403.common.logging.ALL
 import ru.inforion.lab403.common.logging.LogLevel
 import ru.inforion.lab403.common.logging.logger.Record
-import ru.inforion.lab403.common.logging.formatters.AbstractFormatter
+import ru.inforion.lab403.common.logging.formatters.Formatter
 import ru.inforion.lab403.common.logging.permit
 import ru.inforion.lab403.common.logging.publishers.AbstractPublisher
 
@@ -21,7 +21,7 @@ class PublisherConfig(val name: String, val level: LogLevel = ALL) : AbstractCon
 
     }
 
-    private var formatterConfig: AbstractConfig<AbstractFormatter>? = null
+    private var formatterConfig: AbstractConfig<Formatter>? = null
 
     override fun generate() = object : AbstractPublisher(name) {
         private val formatter = formatterConfig?.generate()
@@ -50,7 +50,7 @@ class PublisherConfig(val name: String, val level: LogLevel = ALL) : AbstractCon
      *
      * @param formatter formatter to set
      */
-    fun formatter(formatter: AbstractFormatter) {
+    fun formatter(formatter: Formatter) {
         formatterConfig = AbstractConfig { formatter }
     }
 

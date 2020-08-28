@@ -8,7 +8,8 @@ import ru.inforion.lab403.common.logging.logger.Record
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Informative(val painter: AbstractFormatter = ColorMultiline): AbstractFormatter {
+class Informative(val painter: Formatter = ColorMultiline):
+    Formatter {
 
     companion object {
         var locationLength = 50

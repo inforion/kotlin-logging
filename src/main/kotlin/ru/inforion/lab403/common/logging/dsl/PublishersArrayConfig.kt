@@ -2,7 +2,7 @@ package ru.inforion.lab403.common.logging.dsl
 
 import ru.inforion.lab403.common.logging.ALL
 import ru.inforion.lab403.common.logging.LogLevel
-import ru.inforion.lab403.common.logging.formatters.AbstractFormatter
+import ru.inforion.lab403.common.logging.formatters.Formatter
 import ru.inforion.lab403.common.logging.publishers.AbstractPublisher
 import ru.inforion.lab403.common.logging.publishers.BeautyPublisher
 import java.io.File
@@ -39,7 +39,7 @@ class PublishersArrayConfig : AbstractConfig<Array<AbstractPublisher>> {
      * @param level stdout publisher log level
      * @param formatter stdout publisher formatter
      */
-    fun stdout(level: LogLevel = ALL, formatter: AbstractFormatter = BeautyPublisher.defaultFormatter) = append {
+    fun stdout(level: LogLevel = ALL, formatter: Formatter = BeautyPublisher.defaultFormatter) = append {
         AbstractConfig { BeautyPublisher.stdout(level, formatter) }
     }
 
@@ -49,7 +49,7 @@ class PublishersArrayConfig : AbstractConfig<Array<AbstractPublisher>> {
      * @param level stderr publisher log level
      * @param formatter stderr publisher formatter
      */
-    fun stderr(level: LogLevel = ALL, formatter: AbstractFormatter = BeautyPublisher.defaultFormatter) = append {
+    fun stderr(level: LogLevel = ALL, formatter: Formatter = BeautyPublisher.defaultFormatter) = append {
         AbstractConfig { BeautyPublisher.stderr(level, formatter) }
     }
 
@@ -65,7 +65,7 @@ class PublishersArrayConfig : AbstractConfig<Array<AbstractPublisher>> {
         file: File,
         append: Boolean = false,
         level: LogLevel = ALL,
-        formatter: AbstractFormatter = BeautyPublisher.defaultFormatter
+        formatter: Formatter = BeautyPublisher.defaultFormatter
     ) = append {
         AbstractConfig { BeautyPublisher.file(file, append, level, formatter) }
     }
@@ -81,7 +81,7 @@ class PublishersArrayConfig : AbstractConfig<Array<AbstractPublisher>> {
     fun writer(
         name: String = "writer",
         level: LogLevel = ALL,
-        formatter: AbstractFormatter = BeautyPublisher.defaultFormatter,
+        formatter: Formatter = BeautyPublisher.defaultFormatter,
         writer: (message: String) -> Unit
     ) = append { AbstractConfig { BeautyPublisher.new(name, level, formatter, writer) } }
 }
