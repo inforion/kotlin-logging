@@ -63,4 +63,4 @@ fun <T: Any> T.logger(
  * Returns logger from extended class (or the enclosing class)
  */
 @Deprecated("please use logger(level: LogLevel, ...)")
-fun <T: Any> T.logger(level: Level = Level.FINE) = logger(javaClass, level.logLevel(), true)
+fun <T: Any> T.logger(level: Level) = logger(javaClass, level.logLevel(), true)
