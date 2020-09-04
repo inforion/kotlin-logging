@@ -20,7 +20,7 @@ dependencies {
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-test'
 
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.11.2'
-    implementation group: 'com.github.inforion', name: 'kotlin-extensions', version: '+'
+    implementation group: 'com.github.inforion', name: 'kotlin-extensions', version: 'v0.3.0'
 
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.6.2'
