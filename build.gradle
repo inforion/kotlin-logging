@@ -31,21 +31,6 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "11"
 }
 
-// To specify a license in the pom:
-install {
-    repositories.mavenInstaller {
-        pom.project {
-            licenses {
-                license {
-                    name 'The MIT License'
-                    url 'https://opensource.org/licenses/MIT'
-                    distribution 'repo'
-                }
-            }
-        }
-    }
-}
-
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allSource
@@ -54,12 +39,27 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId = group
-            artifactId = 'kotlin-logging'
-            version = version
-
             from components.kotlin
             artifact tasks.sourcesJar
+
+            pom {
+                groupId = group
+                artifactId = 'kotlin-logging'
+                version = version
+
+                licenses {
+                    license {
+                        name = 'The MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:git://github.com/inforion/kotlin-logging.git'
+                    developerConnection = 'scm:git:ssh://github.com/inforion/kotlin-logging.git'
+                    url = "https://github.com/inforion/kotlin-logging"
+                }
+            }
         }
     }
 }
