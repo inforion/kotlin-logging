@@ -3,8 +3,8 @@ package ru.inforion.lab403.common.logging.logger
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import ru.inforion.lab403.common.extensions.toFile
 import ru.inforion.lab403.common.logging.Messenger
+import java.io.File
 
 
 class Config {
@@ -29,7 +29,7 @@ class Config {
 
     private val configurations by lazy {
         val path = env(confPathVariable)
-        val file = path?.toFile()
+        val file = if (path != null) File(path) else null
         if (file?.isFile != true) debug { "Logging configuration file can't be loaded: $file" }
         file
     }

@@ -2,8 +2,8 @@ package ru.inforion.lab403.common.logging.dsl
 
 import ru.inforion.lab403.common.logging.ALL
 import ru.inforion.lab403.common.logging.LogLevel
-import ru.inforion.lab403.common.logging.logger.Record
 import ru.inforion.lab403.common.logging.formatters.Formatter
+import ru.inforion.lab403.common.logging.logger.Record
 import ru.inforion.lab403.common.logging.permit
 import ru.inforion.lab403.common.logging.publishers.AbstractPublisher
 

@@ -1,8 +1,8 @@
 package ru.inforion.lab403.common.logging.formatters
 
-import ru.inforion.lab403.common.extensions.os
 import ru.inforion.lab403.common.logging.*
 import ru.inforion.lab403.common.logging.logger.Record
+import ru.inforion.lab403.common.logging.misc.os
 
 object ColorMultiline: Formatter {
 

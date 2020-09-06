@@ -1,7 +1,7 @@
 package ru.inforion.lab403.common.logging.dsl
 
-import ru.inforion.lab403.common.logging.logger.Record
 import ru.inforion.lab403.common.logging.formatters.Formatter
+import ru.inforion.lab403.common.logging.logger.Record
 
 
 class FormatterConfig : AbstractConfig<Formatter> {

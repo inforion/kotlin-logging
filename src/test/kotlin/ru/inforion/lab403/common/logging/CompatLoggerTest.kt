@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package ru.inforion.lab403.common.logging
 
 import org.junit.Test

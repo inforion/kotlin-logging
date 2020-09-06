@@ -2,10 +2,10 @@ package ru.inforion.lab403.common.logging.publishers
 
 import ru.inforion.lab403.common.logging.ALL
 import ru.inforion.lab403.common.logging.LogLevel
-import ru.inforion.lab403.common.logging.logger.Record
+import ru.inforion.lab403.common.logging.formatters.Absent
 import ru.inforion.lab403.common.logging.formatters.Formatter
 import ru.inforion.lab403.common.logging.formatters.Informative
-import ru.inforion.lab403.common.logging.formatters.Absent
+import ru.inforion.lab403.common.logging.logger.Record
 import ru.inforion.lab403.common.logging.permit
 import java.io.File
 import java.io.FileWriter

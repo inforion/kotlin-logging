@@ -1,12 +1,12 @@
 package ru.inforion.lab403.common.logging
 
 import org.junit.Test
-import ru.inforion.lab403.common.extensions.toFile
 import ru.inforion.lab403.common.logging.formatters.ColorMultiline
 import ru.inforion.lab403.common.logging.formatters.Informative
 import ru.inforion.lab403.common.logging.formatters.Newline
 import ru.inforion.lab403.common.logging.formatters.Absent
 import ru.inforion.lab403.common.logging.publishers.BeautyPublisher
+import java.io.File
 
 
 internal class ConfiguredLoggerTest {
@@ -48,10 +48,10 @@ internal class ConfiguredLoggerTest {
                 println("printer writer -> $it")
             }
 
-            "temp".toFile().mkdirs()
+            File("temp").mkdirs()
 
-            file("temp/mew_rewrite".toFile(), false, FINER, Informative(Absent))
-            file("temp/mew_append".toFile(), true, WARNING, Informative(Absent))
+            file(File("temp/mew_rewrite"), false, FINER, Informative(Absent))
+            file(File("temp/mew_append"), true, WARNING, Informative(Absent))
         }
 
         log.severe { "Print zero severe message" }

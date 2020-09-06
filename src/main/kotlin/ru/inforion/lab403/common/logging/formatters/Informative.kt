@@ -2,9 +2,9 @@
 
 package ru.inforion.lab403.common.logging.formatters
 
-import ru.inforion.lab403.common.extensions.stretch
 import ru.inforion.lab403.common.logging.*
 import ru.inforion.lab403.common.logging.logger.Record
+import ru.inforion.lab403.common.logging.misc.stretch
 import java.text.SimpleDateFormat
 import java.util.*
 
