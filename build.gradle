@@ -8,7 +8,6 @@ plugins {
 
 group = 'com.github.inforion'
 version = '0.2.2'
-description = 'Simple Kotlin logging library with color support for Unix-like systems'
 
 repositories {
     mavenLocal()
@@ -81,8 +80,11 @@ publishing {
 
             pom {
                 groupId = group
-                artifactId = 'kotlin-logging'
+                artifactId = "kotlin-logging"
+                name = "kotlin-logging"
                 version = version
+                url = "https://github.com/inforion/kotlin-logging"
+                description = 'Simple Kotlin logging library with color support for Unix-like systems'
 
                 licenses {
                     license {
@@ -110,6 +112,7 @@ publishing {
 }
 
 signing {
+    required = false
     useGpgCmd()
     sign publishing.publications.kotlinLogging
 }
