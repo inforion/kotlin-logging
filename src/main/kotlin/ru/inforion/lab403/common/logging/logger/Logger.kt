@@ -34,11 +34,16 @@ class Logger private constructor(
         private val levels = Config()
 
         /**
-         * Change all loggers [flushOnPublish]
+         * Execute given [action] for each known and newer created loggers
          *
-         * @param value if true - all loggers will flush any record immediately when publish it
+         * @param action is action to execute
          */
-        fun flushOnPublish(value: Boolean) = loggers.values.forEach { it.flushOnPublish = value }
+        fun forEachExistAndNew(action: (logger: Logger) -> Unit) {
+            loggers.values.forEach(action)
+            callbacks.add(action)
+        }
+
+        private val callbacks = mutableListOf<LoggerActionCallback>()
 
         /**
          * Create new logger by name with specified publishers or get it (logger) if it already exist for the class
@@ -51,7 +56,7 @@ class Logger private constructor(
          */
         fun create(name: String, level: LogLevel, flush: Boolean, vararg publishers: AbstractPublisher) = loggers.getOrPut(name) {
             val actual = levels[name, level]
-            Logger(name, actual, flush, *publishers)
+            Logger(name, actual, flush, *publishers).apply { callbacks.forEach { it.invoke(this) } }
         }
 
         /**
