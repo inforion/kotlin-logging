@@ -34,14 +34,22 @@ class Logger private constructor(
         private val levels = Config()
 
         /**
-         * Execute given [action] for each known and newer created loggers
+         * Execute given [action] for each known logger
          *
          * @param action is action to execute
+         *
+         * @since 0.2.3
          */
-        fun forEachExistAndNew(action: (logger: Logger) -> Unit) {
-            loggers.values.forEach(action)
-            callbacks.add(action)
-        }
+        fun forEach(action: (logger: Logger) -> Unit) = apply { loggers.values.forEach(action) }
+
+        /**
+         * Execute given [action] for each known logger
+         *
+         * @param action is action to execute
+         *
+         * @since 0.2.3
+         */
+        fun onCreate(action: (logger: Logger) -> Unit) = apply { callbacks.add(action) }
 
         private val callbacks = mutableListOf<LoggerActionCallback>()
 
@@ -53,6 +61,8 @@ class Logger private constructor(
          * @param name name of the new logger
          * @param level level of logging message below it will not be published
          * @param publishers list of publishers
+         *
+         * @since 0.2.0
          */
         fun create(name: String, level: LogLevel, flush: Boolean, vararg publishers: AbstractPublisher) = loggers.getOrPut(name) {
             val actual = levels[name, level]
@@ -67,6 +77,8 @@ class Logger private constructor(
          * @param klass class to use to get name of the new logger
          * @param level level of logging message below it will not be published
          * @param publishers list of publishers
+         *
+         * @since 0.2.0
          */
         fun <T> create(klass: Class<T>, level: LogLevel, flush: Boolean, vararg publishers: AbstractPublisher) =
             create(klass.simpleName, level, flush, *publishers)
@@ -75,6 +87,8 @@ class Logger private constructor(
          * Add new publisher to all loggers
          *
          * @param publisher publisher to add
+         *
+         * @since 0.2.0
          */
         fun addPublisher(publisher: AbstractPublisher) = loggers.values.forEach { it.addPublisher(publisher) }
 
@@ -82,11 +96,15 @@ class Logger private constructor(
          * Remove publisher from all loggers
          *
          * @param publisher publisher to remove
+         *
+         * @since 0.2.0
          */
         fun removePublisher(publisher: AbstractPublisher) = loggers.values.forEach { it.removePublisher(publisher) }
 
         /**
          * Flush all publishers of all loggers
+         *
+         * @since 0.2.0
          */
         fun flush() = loggers.values.forEach { it.flush() }
     }
@@ -99,6 +117,8 @@ class Logger private constructor(
      * Add new publisher to logger
      *
      * @param publisher publisher to add
+     *
+     * @since 0.2.0
      */
     fun addPublisher(publisher: AbstractPublisher) = handlers.add(publisher)
 
@@ -106,11 +126,15 @@ class Logger private constructor(
      * Remove publisher to logger
      *
      * @param publisher publisher to remove
+     *
+     * @since 0.2.0
      */
     fun removePublisher(publisher: AbstractPublisher) = handlers.remove(publisher)
 
     /**
      * Flush all publishers of logger
+     *
+     * @since 0.2.0
      */
     fun flush() = handlers.forEach { it.flush() }
 
@@ -131,6 +155,8 @@ class Logger private constructor(
      * @param level message log level
      * @param flush force to flush the record immediately
      * @param message message supplier
+     *
+     * @since 0.2.0
      */
     inline fun <T:Any> log(level: LogLevel, flush: Boolean = false, message: Messenger<T>) {
         if (this.level permit level) log(level, flush, message().toString())
@@ -140,17 +166,84 @@ class Logger private constructor(
     inline fun <T:Any> log(level: Level, flush: Boolean = false, message: Messenger<T>) =
         log(level.logLevel(), flush, message)
 
+    /**
+     * Emits a lazy severe log [message] (score = 1000)
+     *
+     * @param flush if true or [flushOnPublish] is true message will be emitted immediately
+     *
+     * @since 0.2.0
+     */
     inline fun <T: Any> severe(flush: Boolean = false, message: Messenger<T>) = log(SEVERE, flush, message)
 
+    /**
+     * Emits a lazy warning log [message] (score = 900)
+     *
+     * @param flush if true or [flushOnPublish] is true message will be emitted immediately
+     *
+     * @since 0.2.0
+     */
     inline fun <T: Any> warning(flush: Boolean = false, message: Messenger<T>) = log(WARNING, flush, message)
 
+    /**
+     * Emits a lazy info log [message] (score = 800)
+     *
+     * @param flush if true or [flushOnPublish] is true message will be emitted immediately
+     *
+     * @since 0.2.0
+     */
     inline fun <T: Any> info(flush: Boolean = false, message: Messenger<T>) = log(INFO, flush, message)
 
+    /**
+     * Emits a lazy config log [message] (score = 700)
+     *
+     * @param flush if true or [flushOnPublish] is true message will be emitted immediately
+     *
+     * @since 0.2.0
+     */
     inline fun <T: Any> config(flush: Boolean = false, message: Messenger<T>) = log(CONFIG, flush, message)
 
+    /**
+     * Emits a lazy fine log [message] (score = 500)
+     *
+     * @param flush if true or [flushOnPublish] is true message will be emitted immediately
+     *
+     * @since 0.2.0
+     */
     inline fun <T: Any> fine(flush: Boolean = false, message: Messenger<T>) = log(FINE, flush, message)
 
+    /**
+     * Emits a lazy finer log [message] (score = 400)
+     *
+     * @param flush if true or [flushOnPublish] is true message will be emitted immediately
+     *
+     * @since 0.2.0
+     */
     inline fun <T: Any> finer(flush: Boolean = false, message: Messenger<T>) = log(FINER, flush, message)
 
+    /**
+     * Emits a lazy finest log [message] (score = 300)
+     *
+     * @param flush if true or [flushOnPublish] is true message will be emitted immediately
+     *
+     * @since 0.2.0
+     */
     inline fun <T: Any> finest(flush: Boolean = false, message: Messenger<T>) = log(FINEST, flush, message)
+
+    /**
+     * Emits a lazy debug log [message] (score = 200)
+     *
+     * @param flush if true or [flushOnPublish] is true message will be emitted immediately
+     *
+     * @since 0.2.0
+     */
+    inline fun <T: Any> debug(flush: Boolean = false, message: Messenger<T>) = log(DEBUG, flush, message)
+
+    /**
+     * Emits a lazy trace log [message] (score = 100)
+     *
+     * @param flush if true or [flushOnPublish] is true message will be emitted immediately
+     *
+     * @since 0.2.0
+     */
+    inline fun <T: Any> trace(flush: Boolean = false, message: Messenger<T>) = log(TRACE, flush, message)
 }

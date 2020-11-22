@@ -52,6 +52,8 @@ internal class ConfiguredLoggerTest {
 
             file(File("temp/mew_rewrite"), false, FINER, Informative(Absent))
             file(File("temp/mew_append"), true, WARNING, Informative(Absent))
+
+            stdout(ALL)
         }
 
         log.severe { "Print zero severe message" }
@@ -61,5 +63,7 @@ internal class ConfiguredLoggerTest {
         log.fine { "Print the forth fine message" }
         log.finer { "Print the fifth finer message" }
         log.finest { "Print the six finest message" }
+        log.debug { "Print the 7 debug message" }
+        log.trace { "Print the 8 trace message" }
     }
 }

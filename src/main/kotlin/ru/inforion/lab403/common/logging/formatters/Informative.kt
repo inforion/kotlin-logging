@@ -31,24 +31,11 @@ class Informative(val painter: Formatter = ColorMultiline):
         return if (locationLength != -1) stretch(location, locationLength) else location
     }
 
-    private inline fun formatLevel(level: LogLevel) = when (level) {
-        OFF -> "OFF"
-        SEVERE -> "SVR"
-        WARNING -> "WRN"
-        CONFIG -> "CFG"
-        INFO -> "INF"
-        FINE -> "FNE"
-        FINER -> "FNR"
-        FINEST -> "FST"
-        ALL -> "ALL"
-        else -> level.toString()
-    }
-
     private inline fun formatDate(millis: Long) = SimpleDateFormat(dateFormat).format(Date(millis))
 
     override fun format(message: String, record: Record): String {
         val location = formatLocation(record.caller)
-        val level = formatLevel(record.level)
+        val level = record.level.abbreviation
         val time = formatDate(record.millis)
         // TODO: Make more efficient way
         val formatted = messageFormat

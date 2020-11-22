@@ -11,8 +11,8 @@ class Config {
     companion object {
         private val parser = jacksonObjectMapper().apply { configure(JsonParser.Feature.ALLOW_COMMENTS, true) }
 
-        const val confPathVariable: String = "INFORION_LOGGING_CONF_PATH"
-        const val confDebugVariable: String = "INFORION_LOGGING_PRINT"
+        const val confPathVariable = "INFORION_LOGGING_CONF_PATH"
+        const val confDebugVariable = "INFORION_LOGGING_PRINT"
     }
 
     private inline fun <T> info(message: Messenger<T>) = println(message().toString())
@@ -21,7 +21,9 @@ class Config {
         if (isDebugEnabled) info(message)
     }
 
-    private fun env(name: String): String? = System.getenv(name).also { info { "$name: $it" } }
+    private fun env(name: String): String? = System.getenv(name).also {
+        if (it != null) info { "$name: $it" }
+    }
 
     private val isDebugEnabled by lazy {
         env(confDebugVariable)?.trim() == "true"
