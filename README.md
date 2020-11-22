@@ -65,7 +65,7 @@ class Lumberjack {
 
     fun saw() {
         count++
-        log.config { "I saw $counts logs" }
+        log.config { "I saw $count logs" }
     }
 }
 ```
@@ -137,7 +137,8 @@ class Lumberjack {
     var count = 0
 
     fun saw() {
-        log.config { "I saw ${++count} logs" }
+        count++
+        log.config { "I saw $count logs" }
     }
 }
 ```
