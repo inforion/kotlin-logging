@@ -1,3 +1,6 @@
+[![](https://jitpack.io/v/inforion/kotlin-logging.svg)](https://jitpack.io/#inforion/kotlin-logging)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.inforion/kotlin-logging/badge.svg)](https://mvnrepository.com/artifact/com.github.inforion/kotlin-logging)
+
 # kotlin-logging
 
 Simple Kotlin logging library with color support for Unix-like systems written in pure Kotlin.
@@ -142,6 +145,3 @@ class Lumberjack {
     }
 }
 ```
-
-[![](https://jitpack.io/v/inforion/kotlin-logging.svg)](https://jitpack.io/#inforion/kotlin-logging)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.inforion/kotlin-logging/badge.svg)](https://mvnrepository.com/artifact/com.github.inforion/kotlin-logging)
